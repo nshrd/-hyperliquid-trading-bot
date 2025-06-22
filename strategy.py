@@ -55,8 +55,9 @@ class LongShortStrategy:
         performance_monitor: IPerformanceMonitor,
         risk_manager: Optional[IRiskManager] = None,
         ratio_target: float = 2.0,
+        ratio_low: float = 1.8,
+        ratio_high: float = 2.2,
         reserve_percent: float = 0.05,
-        rebalance_threshold: float = 0.10,
         shorts_symbols: Optional[List[str]] = None
     ):
         self.logger = setup_unified_logger("strategy")
@@ -70,8 +71,9 @@ class LongShortStrategy:
         
         # Параметры стратегии
         self.ratio_target = ratio_target
+        self.ratio_low = ratio_low
+        self.ratio_high = ratio_high
         self.reserve_percent = reserve_percent
-        self.rebalance_threshold = rebalance_threshold
         self.shorts_symbols = shorts_symbols if shorts_symbols is not None else ["ZK", "STRK"]
         
         self.logger.info(f"[INIT] Strategy initialized - Target ratio: {ratio_target}, Reserve: {reserve_percent:.1%}")
@@ -140,20 +142,22 @@ class LongShortStrategy:
         btc_target_usd = total_target * self.ratio_target / (self.ratio_target + 1)
         shorts_target_usd = total_target * 1 / (self.ratio_target + 1)
         
-        # Отклонение от целевого соотношения
+        # Проверка границ ratio для ребалансировки
+        current_ratio = portfolio.position_ratio
+        should_rebalance = current_ratio < self.ratio_low or current_ratio > self.ratio_high
+        
+        # Рассчитываем процентное отклонение для логирования
         if self.ratio_target > 0:
-            deviation_percent = abs(portfolio.position_ratio - self.ratio_target) / self.ratio_target
+            deviation_percent = abs(current_ratio - self.ratio_target) / self.ratio_target
         else:
             deviation_percent = 0.0
         
-        should_rebalance = deviation_percent > self.rebalance_threshold
-        
         reason = ""
         if should_rebalance:
-            if portfolio.position_ratio > self.ratio_target:
-                reason = f"Ratio too high: {portfolio.position_ratio:.2f} > {self.ratio_target:.2f}"
-            else:
-                reason = f"Ratio too low: {portfolio.position_ratio:.2f} < {self.ratio_target:.2f}"
+            if current_ratio > self.ratio_high:
+                reason = f"Ratio too high: {current_ratio:.2f} > {self.ratio_high:.2f} (max)"
+            elif current_ratio < self.ratio_low:
+                reason = f"Ratio too low: {current_ratio:.2f} < {self.ratio_low:.2f} (min)"
         
         return RebalanceDecision(
             should_rebalance=should_rebalance,
@@ -317,7 +321,7 @@ class LongShortStrategy:
             
             # Логируем состояние
             self.logger.debug(f"[STRATEGY] NAV: ${portfolio.nav:.2f}, Ratio: {portfolio.position_ratio:.2f} (target: {self.ratio_target:.2f})")
-            self.logger.debug(f"[STRATEGY] Deviation: {decision.deviation_percent:.1%}, Threshold: {self.rebalance_threshold:.1%}")
+            self.logger.debug(f"[STRATEGY] Boundaries: [{self.ratio_low:.2f}, {self.ratio_high:.2f}], Deviation: {decision.deviation_percent:.1%}")
             
             # Выполняем ребалансировку если необходимо
             if decision.should_rebalance:

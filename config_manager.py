@@ -87,8 +87,18 @@ class ConfigManager:
 
     @property
     def rebalance_threshold(self) -> float:
-        """Порог для ребалансировки"""
+        """Порог ребалансировки (процентное отклонение от target)"""
         return self.config.get('rebalance_threshold', 0.02)
+
+    @property
+    def ratio_low(self) -> float:
+        """Нижняя граница ratio для ребалансировки"""
+        return self.config.get('ratio_low', 1.8)
+
+    @property
+    def ratio_high(self) -> float:
+        """Верхняя граница ratio для ребалансировки"""
+        return self.config.get('ratio_high', 2.2)
 
     @property
     def max_leverage(self) -> int:

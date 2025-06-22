@@ -70,8 +70,9 @@ class HyperliquidTrader:
                 performance_monitor=self.performance_monitor,
                 risk_manager=self.risk_manager,
                 ratio_target=self.config_manager.ratio_target,
+                ratio_low=self.config_manager.ratio_low,
+                ratio_high=self.config_manager.ratio_high,
                 reserve_percent=self.config_manager.reserve_usd_percent,
-                rebalance_threshold=self.config_manager.rebalance_threshold,
                 shorts_symbols=self.config_manager.shorts
             )
 
