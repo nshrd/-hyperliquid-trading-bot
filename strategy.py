@@ -280,12 +280,17 @@ class LongShortStrategy:
             total_unrealized = portfolio.btc_value_usd + portfolio.shorts_value_usd - portfolio.nav
             self.performance_monitor.track_pnl(total_unrealized, 0.0)  # Realized = 0 для простоты
             
+            # Проверяем, включена ли ребалансировка
+            from config_manager import ConfigManager
+            config = ConfigManager()
+            
+            if not config.rebalance_enabled:
+                self.logger.info("[STRATEGY] Rebalancing is disabled in config")
+                return True
+            
             # Проверяем и исправляем leverage compliance ПЕРЕД ребалансировкой
             if self.risk_manager:
                 try:
-                    from config_manager import ConfigManager
-                    config = ConfigManager()
-                    
                     compliance = self.risk_manager.check_leverage_compliance(
                         config.leverage_btc,
                         config.leverage_shorts,

@@ -20,6 +20,7 @@ try:
     with open('config.json') as f:
         config = json.load(f)
     TELEGRAM_TOKEN = config.get('telegram_token')
+    TELEGRAM_CHAT_ID = config.get('telegram_chat_id')
     account_address = config.get('account_address')
     secret_key = config.get('secret_key')
 
@@ -37,6 +38,20 @@ exchange = Exchange(wallet, base_url=MAINNET_API_URL, account_address=account_ad
 trader_process = None
 
 
+def is_authorized(message: Message) -> bool:
+    """Проверка авторизации пользователя"""
+    if not TELEGRAM_CHAT_ID:
+        return True  # Если chat_id не указан, разрешаем всем
+    
+    return str(message.chat.id) == str(TELEGRAM_CHAT_ID)
+
+
+async def unauthorized_handler(message: Message):
+    """Обработчик для неавторизованных пользователей"""
+    await message.answer("❌ У вас нет доступа к этому боту.")
+    return
+
+
 def load_state():
     with open('state.json') as f:
         return json.load(f)
@@ -48,6 +63,10 @@ def save_state(state, path='state.json'):
 
 
 async def status(message: Message):
+    if not is_authorized(message):
+        await unauthorized_handler(message)
+        return
+        
     state = load_state()
     nav = state['nav_history'][-1]['nav'] if state['nav_history'] else 'N/A'
     positions = state['positions']

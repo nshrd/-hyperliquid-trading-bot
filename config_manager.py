@@ -86,6 +86,11 @@ class ConfigManager:
         return self.config.get('start_nav', 100.0)
 
     @property
+    def gross(self) -> float:
+        """Общий мультипликатор позиций"""
+        return self.config.get('gross', 3.0)
+
+    @property
     def rebalance_threshold(self) -> float:
         """Порог ребалансировки (процентное отклонение от target)"""
         return self.config.get('rebalance_threshold', 0.02)
@@ -124,6 +129,16 @@ class ConfigManager:
     def ratio_target(self) -> float:
         """Целевое соотношение BTC к шортам"""
         return self.config.get('ratio_tgt', 2.0)
+
+    @property
+    def rebalance_enabled(self) -> bool:
+        """Включена ли ребалансировка"""
+        return self.config.get('rebalance_enabled', True)
+
+    @property
+    def telegram_chat_id(self) -> str:
+        """ID чата для Telegram уведомлений"""
+        return self.config.get('telegram_chat_id', '')
 
     def validate_config(self) -> bool:
         """Валидация конфигурации (использует новый валидатор)"""
