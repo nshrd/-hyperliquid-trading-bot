@@ -1,0 +1,32 @@
+{
+  "nav_history": [
+    {
+      "date": "2025-01-01 00:00:00",
+      "nav": 100
+    }
+  ],
+  "positions": {
+    "BTC": 0.0,
+    "ZK": 0.0,
+    "STRK": 0.0
+  },
+  "funding_history": {
+    "BTC": [0.0],
+    "ZK": [0.0],
+    "STRK": [0.0]
+  },
+  "fees_history": {
+    "BTC": [0.0],
+    "ZK": [0.0],
+    "STRK": [0.0]
+  },
+  "last_rebalance": null,
+  "total_fees_paid": 0.0,
+  "total_funding_received": 0.0,
+  "performance_metrics": {
+    "total_return": 0.0,
+    "max_drawdown": 0.0,
+    "sharpe_ratio": 0.0,
+    "win_rate": 0.0
+  }
+} 

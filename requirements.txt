@@ -1,0 +1,17 @@
+# Core trading dependencies
+hyperliquid-python-sdk==0.15.0
+eth-account==0.11.3
+
+# Telegram bot
+aiogram==3.20.0.post0
+
+# Data analysis and visualization
+matplotlib==3.10.3
+pandas==2.2.0
+numpy==1.26.4
+
+# Development and testing (optional)
+# pytest>=7.0.0
+# black>=22.0.0
+# flake8>=4.0.0
+# mypy>=0.950

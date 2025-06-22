@@ -1,0 +1,21 @@
+{
+    "account_address": "0xYOUR_ETHEREUM_ADDRESS_HERE",
+    "secret_key": "0xYOUR_PRIVATE_KEY_HERE",
+    "start_nav": 100,
+    "gross": 3.0,
+    "ratio_tgt": 2.0,
+    "ratio_low": 1.8,
+    "ratio_high": 2.2,
+    "rebalance_enabled": true,
+    "leverage_btc": 3,
+    "leverage_shorts": 3,
+    "shorts": ["ZK", "STRK"],
+    "reserve_usd_percent": 0.05,
+    "api_delays": {
+        "order_processing": 3,
+        "leverage_update": 2,
+        "position_check": 1
+    },
+    "telegram_token": "YOUR_TELEGRAM_BOT_TOKEN_HERE",
+    "telegram_chat_id": "YOUR_TELEGRAM_CHAT_ID_HERE"
+} 
